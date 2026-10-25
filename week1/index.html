@@ -1,0 +1,776 @@
+<!DOCTYPE html>
+<html lang="ko">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>지현 (@jihyeon.design)</title>
+  <link rel="preconnect" href="https://fonts.googleapis.com">
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+  <link href="https://fonts.googleapis.com/css2?family=Gowun+Batang:wght@400;700&family=Cormorant+Garamond:ital,wght@0,400;0,500;1,400&display=swap" rel="stylesheet">
+  <style>
+    :root {
+      --lime: #b5d66b;    /* 연두색 */
+      --navy: #1f2a4d;    /* 남색 */
+      --cream: #f4eedd;   /* 크림색 */
+      --paper: #fbf8f0;
+      --ink: #1f2a4d;
+      --muted: #8a8d99;
+      --line: rgba(31, 42, 77, 0.12);
+    }
+
+    * { margin: 0; padding: 0; box-sizing: border-box; }
+
+    body {
+      background: var(--paper);
+      color: var(--ink);
+      font-family: "Gowun Batang", serif;
+      -webkit-font-smoothing: antialiased;
+    }
+
+    button { font: inherit; color: inherit; background: none; border: none; cursor: pointer; }
+
+    .page {
+      max-width: 935px;
+      margin: 0 auto;
+      padding-bottom: 72px; /* 하단 탭바 자리 */
+    }
+
+    /* ── 상단 바 ── */
+    .topbar {
+      position: sticky;
+      top: 0;
+      z-index: 10;
+      display: flex;
+      align-items: center;
+      justify-content: space-between;
+      height: 56px;
+      padding: 0 16px;
+      background: rgba(251, 248, 240, 0.92);
+      backdrop-filter: blur(8px);
+      border-bottom: 1px solid var(--line);
+    }
+
+    .topbar .handle {
+      font-family: "Cormorant Garamond", serif;
+      font-weight: 500;
+      font-size: 22px;
+      letter-spacing: 0.02em;
+    }
+
+    .topbar .icons { display: flex; gap: 18px; }
+    .icon { width: 24px; height: 24px; stroke: var(--ink); stroke-width: 1.5; fill: none; }
+
+    /* ── 프로필 머리 ── */
+    .profile {
+      display: grid;
+      grid-template-columns: auto 1fr;
+      gap: 28px;
+      align-items: center;
+      padding: 24px 16px 0;
+    }
+
+    .avatar {
+      width: 86px;
+      height: 86px;
+      padding: 3px;
+      border-radius: 50%;
+      background: conic-gradient(from 200deg, var(--lime), var(--navy), var(--lime));
+    }
+
+    .avatar span {
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      width: 100%;
+      height: 100%;
+      border-radius: 50%;
+      border: 3px solid var(--paper);
+      background: var(--cream);
+      font-size: 32px;
+      color: var(--navy);
+    }
+
+    .stats {
+      display: flex;
+      justify-content: space-around;
+      list-style: none;
+      text-align: center;
+    }
+
+    .stats strong { display: block; font-size: 18px; font-weight: 700; }
+    .stats span { font-size: 13px; color: var(--muted); }
+
+    .bio { padding: 16px 16px 0; font-size: 14px; line-height: 1.6; }
+    .bio .name { font-weight: 700; }
+    .bio .role { color: var(--muted); }
+    .bio .tags { color: #5f7f1f; }
+
+    .actions {
+      display: grid;
+      grid-template-columns: 1fr 1fr;
+      gap: 8px;
+      padding: 16px 16px 0;
+    }
+
+    .actions button {
+      height: 34px;
+      border-radius: 8px;
+      font-size: 14px;
+      font-weight: 700;
+      background: var(--cream);
+      transition: background 0.2s, color 0.2s;
+    }
+
+    .actions .follow { background: var(--navy); color: var(--paper); }
+    .actions .follow.on { background: var(--cream); color: var(--navy); }
+
+    /* ── 하이라이트 ── */
+    .highlights {
+      display: flex;
+      gap: 18px;
+      padding: 24px 16px 20px;
+      overflow-x: auto;
+      list-style: none;
+      scrollbar-width: none;
+    }
+
+    .highlights::-webkit-scrollbar { display: none; }
+
+    .highlights li { flex: none; width: 64px; text-align: center; font-size: 12px; }
+
+    .highlights .ring {
+      width: 64px;
+      height: 64px;
+      margin-bottom: 6px;
+      padding: 3px;
+      border-radius: 50%;
+      border: 1px solid var(--line);
+    }
+
+    .highlights .ring i {
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      width: 100%;
+      height: 100%;
+      border-radius: 50%;
+      font-style: normal;
+      font-family: "Cormorant Garamond", serif;
+      font-size: 18px;
+    }
+
+    /* ── 탭 ── */
+    .tabs {
+      display: flex;
+      justify-content: center;
+      border-top: 1px solid var(--line);
+    }
+
+    .tabs span {
+      display: flex;
+      align-items: center;
+      gap: 6px;
+      padding: 12px 0;
+      margin-top: -1px;
+      border-top: 1px solid var(--ink);
+      font-family: "Cormorant Garamond", serif;
+      font-size: 13px;
+      letter-spacing: 0.16em;
+      text-transform: uppercase;
+    }
+
+    .tabs .icon { width: 14px; height: 14px; }
+
+    /* ── 게시물 그리드 ── */
+    .grid {
+      display: grid;
+      grid-template-columns: repeat(3, 1fr);
+      gap: 2px;
+      list-style: none;
+    }
+
+    .post {
+      position: relative;
+      aspect-ratio: 1 / 1;
+      container-type: inline-size;
+      overflow: hidden;
+      display: flex;
+      flex-direction: column;
+      justify-content: center;
+      align-items: center;
+      text-align: center;
+    }
+
+    .post .en {
+      font-family: "Cormorant Garamond", serif;
+      font-style: italic;
+      font-size: 11cqw;
+    }
+
+    .post .ko { font-size: 15cqw; }
+    .post .num {
+      font-family: "Cormorant Garamond", serif;
+      font-style: italic;
+      font-size: 10cqw;
+      margin-bottom: 4cqw;
+    }
+
+    .post:hover::after {
+      content: "";
+      position: absolute;
+      inset: 0;
+      background: rgba(31, 42, 77, 0.12);
+    }
+
+    .p-name  { background: var(--lime); color: var(--navy); }
+    .p-name .ko { font-size: 30cqw; }
+    .p-name .ko::after { content: "."; color: var(--paper); }
+    .p-hello { background: var(--cream); color: var(--navy); }
+    .p-hello .en { font-size: 16cqw; }
+    .p-calm  { background: var(--navy); color: var(--cream); }
+    .p-calm .num { color: var(--lime); }
+    .p-see   { background: var(--paper); color: var(--navy); outline: 1px solid var(--line); outline-offset: -1px; }
+    .p-see .eye {
+      width: 34cqw; height: 34cqw; margin-bottom: 8cqw;
+      border-radius: 50%;
+      background: radial-gradient(circle, var(--navy) 0 22%, var(--lime) 23% 100%);
+    }
+    .p-collect { background: var(--lime); color: var(--navy); }
+    .p-collect .stack { display: flex; gap: 4cqw; margin-bottom: 8cqw; }
+    .p-collect .stack i { width: 12cqw; height: 18cqw; background: var(--paper); }
+    .p-collect .stack i:nth-child(2) { background: var(--navy); }
+    .p-album { background: var(--navy); color: var(--cream); }
+    .p-album .record {
+      width: 52cqw; height: 52cqw; margin-bottom: 8cqw;
+      border-radius: 50%;
+      background: radial-gradient(circle, var(--navy) 0 7%, var(--lime) 8% 30%, #141c36 31% 100%);
+      box-shadow: inset 0 0 0 1px rgba(244, 238, 221, 0.15);
+    }
+    .p-package { background: var(--cream); color: var(--navy); }
+    .p-package .box {
+      width: 42cqw; height: 32cqw; margin-bottom: 8cqw;
+      border: 1.5px solid var(--navy);
+      background: linear-gradient(var(--navy), var(--navy)) center / 1.5px 100% no-repeat;
+    }
+    .p-colors { flex-direction: row; }
+    .p-colors i { flex: 1; height: 100%; }
+    .p-colors i:nth-child(1) { background: var(--lime); }
+    .p-colors i:nth-child(2) { background: var(--navy); }
+    .p-colors i:nth-child(3) { background: var(--cream); }
+    .p-vol { background: var(--paper); color: var(--navy); outline: 1px solid var(--line); outline-offset: -1px; }
+    .p-vol .en { font-size: 14cqw; letter-spacing: 0.1em; text-transform: uppercase; font-style: normal; }
+    .p-vol small { margin-top: 4cqw; font-size: 8cqw; color: var(--muted); }
+
+    /* ── 하단 탭바 (휴대폰) ── */
+    .bottombar {
+      position: fixed;
+      left: 0; right: 0; bottom: 0;
+      display: flex;
+      justify-content: space-around;
+      align-items: center;
+      height: 56px;
+      background: var(--paper);
+      border-top: 1px solid var(--line);
+    }
+
+    .bottombar .me {
+      width: 26px; height: 26px;
+      border-radius: 50%;
+      border: 1.5px solid var(--ink);
+      background: var(--cream);
+      font-size: 12px;
+      display: flex; align-items: center; justify-content: center;
+    }
+
+    /* ── 넓은 화면 ── */
+    @media (min-width: 736px) {
+      .page { padding: 0 20px 40px; }
+      .topbar { padding: 0; }
+      .bottombar { display: none; }
+      .profile { gap: 80px; padding: 40px 60px 0; grid-template-rows: auto auto; }
+      .avatar { width: 150px; height: 150px; grid-row: span 2; }
+      .avatar span { font-size: 56px; }
+      .stats { justify-content: flex-start; gap: 40px; text-align: left; }
+      .stats strong { display: inline; font-size: 16px; margin-right: 4px; }
+      .stats span { font-size: 16px; color: var(--ink); }
+      .bio { padding: 0 60px 0 290px; margin-top: -40px; font-size: 15px; }
+      .actions { padding: 20px 0 0 290px; grid-template-columns: 140px 140px; }
+      .highlights { gap: 40px; padding: 44px 60px 44px; }
+      .highlights li { width: 77px; font-size: 13px; }
+      .highlights .ring { width: 77px; height: 77px; }
+      .grid { gap: 4px; }
+    }
+
+    /* ── 인터랙션 공통 ── */
+    .post { cursor: pointer; }
+    .post:focus-visible { outline: 2px solid var(--lime); outline-offset: -2px; }
+    .highlights button { display: block; width: 100%; }
+    .highlights .ring { transition: transform 0.15s; }
+    .highlights button:hover .ring { border-color: var(--lime); }
+    .highlights button:active .ring { transform: scale(0.94); }
+
+    .overlay { position: fixed; inset: 0; z-index: 50; display: none; }
+    .overlay.open { display: flex; }
+
+    .mini-avatar {
+      flex: none;
+      width: 30px;
+      height: 30px;
+      border-radius: 50%;
+      background: var(--cream);
+      box-shadow: 0 0 0 2px var(--paper), 0 0 0 3.5px var(--lime);
+    }
+
+    /* ── 게시물 크게 보기 ── */
+    .modal {
+      align-items: center;
+      justify-content: center;
+      padding: 24px 64px;
+      background: rgba(20, 28, 54, 0.72);
+      animation: fade 0.2s;
+    }
+
+    .modal-box {
+      display: grid;
+      grid-template-columns: minmax(0, 560px) 320px;
+      max-height: calc(100dvh - 48px);
+      background: var(--paper);
+      animation: pop 0.25s ease;
+    }
+
+    .modal-media { position: relative; aspect-ratio: 1 / 1; }
+    .modal-media .post { width: 100%; height: 100%; cursor: default; user-select: none; }
+    .modal-media .post:hover::after { display: none; }
+
+    .modal-panel { display: flex; flex-direction: column; border-left: 1px solid var(--line); }
+
+    .modal-head {
+      display: flex;
+      align-items: center;
+      gap: 12px;
+      padding: 14px 16px;
+      border-bottom: 1px solid var(--line);
+      font-size: 14px;
+      font-weight: 700;
+    }
+
+    .modal-caption { flex: 1; padding: 16px; font-size: 14px; line-height: 1.7; overflow-y: auto; }
+    .modal-caption b { margin-right: 6px; }
+
+    .modal-foot { padding: 12px 16px 16px; border-top: 1px solid var(--line); }
+
+    .like-btn svg {
+      width: 26px;
+      height: 26px;
+      stroke: var(--ink);
+      stroke-width: 1.5;
+      fill: none;
+    }
+
+    .like-btn.liked svg { fill: var(--lime); stroke: var(--navy); animation: beat 0.3s; }
+    .likes { margin-top: 6px; font-size: 14px; font-weight: 700; }
+    .date { margin-top: 4px; font-size: 11px; letter-spacing: 0.04em; color: var(--muted); }
+
+    .close,
+    .nav-btn {
+      position: fixed;
+      z-index: 2;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      width: 36px;
+      height: 36px;
+      border-radius: 50%;
+      font-family: "Cormorant Garamond", serif;
+      font-size: 26px;
+      line-height: 1;
+    }
+
+    .close { top: 12px; right: 12px; color: var(--paper); background: rgba(31, 42, 77, 0.6); }
+    .nav-btn { top: 50%; transform: translateY(-50%); background: var(--paper); color: var(--navy); }
+    .nav-prev { left: 16px; }
+    .nav-next { right: 16px; }
+
+    .burst {
+      position: absolute;
+      left: 50%;
+      top: 50%;
+      width: 30%;
+      fill: var(--paper);
+      filter: drop-shadow(0 4px 14px rgba(20, 28, 54, 0.3));
+      opacity: 0;
+      transform: translate(-50%, -50%) scale(0);
+      pointer-events: none;
+    }
+
+    .burst.go { animation: burst 0.8s ease forwards; }
+
+    @keyframes burst {
+      15%  { opacity: 1; transform: translate(-50%, -50%) scale(1.15); }
+      30%  { transform: translate(-50%, -50%) scale(0.95); }
+      45%  { transform: translate(-50%, -50%) scale(1); }
+      80%  { opacity: 1; }
+      100% { opacity: 0; transform: translate(-50%, -60%) scale(1); }
+    }
+    @keyframes beat { 50% { transform: scale(1.25); } }
+    @keyframes fade { from { opacity: 0; } }
+    @keyframes pop  { from { opacity: 0; transform: scale(0.96); } }
+    @keyframes up   { from { opacity: 0; transform: translateY(40px); } }
+
+    @media (max-width: 735px) {
+      .modal { padding: 0; align-items: flex-end; }
+      .modal-box {
+        grid-template-columns: 1fr;
+        width: 100%;
+        max-height: 100dvh;
+        overflow-y: auto;
+        animation: up 0.3s ease;
+      }
+      .modal-panel { border-left: none; }
+      .nav-btn { display: none; }
+    }
+
+    /* ── 하이라이트 스토리 ── */
+    .story { align-items: center; justify-content: center; background: #141c36; animation: fade 0.2s; }
+
+    .story-stage {
+      position: relative;
+      display: flex;
+      flex-direction: column;
+      justify-content: center;
+      align-items: center;
+      width: 100%;
+      height: 100dvh;
+      padding: 0 32px;
+      text-align: center;
+      overflow: hidden;
+      transition: background 0.3s, color 0.3s;
+    }
+
+    @media (min-width: 736px) {
+      .story-stage {
+        width: calc(min(92dvh, 800px) * 9 / 16);
+        height: min(92dvh, 800px);
+        border-radius: 10px;
+      }
+    }
+
+    .bars { position: absolute; top: 12px; left: 12px; right: 12px; display: flex; gap: 4px; }
+    .bars span { flex: 1; height: 2px; border-radius: 2px; background: rgba(127, 127, 127, 0.35); overflow: hidden; }
+    .bars i { display: block; width: 0; height: 100%; background: currentColor; }
+
+    .story-head {
+      position: absolute;
+      top: 26px;
+      left: 14px;
+      right: 14px;
+      z-index: 2;
+      display: flex;
+      align-items: center;
+      gap: 10px;
+      font-size: 13px;
+      font-weight: 700;
+    }
+
+    .story-head .mini-avatar { width: 28px; height: 28px; box-shadow: 0 0 0 1.5px currentColor; }
+    .story-head .x { margin-left: auto; font-family: "Cormorant Garamond", serif; font-size: 30px; line-height: 1; }
+
+    .story-content { animation: rise 0.4s ease; }
+    .story-small { font-family: "Cormorant Garamond", serif; font-style: italic; font-size: 18px; opacity: 0.7; }
+    .story-big { margin-top: 12px; font-size: 44px; }
+    .story-text { margin-top: 24px; font-size: 16px; line-height: 1.7; }
+
+    @keyframes rise { from { opacity: 0; transform: translateY(12px); } }
+
+    .tap { position: absolute; top: 64px; bottom: 0; z-index: 1; }
+    .tap-prev { left: 0; width: 33%; }
+    .tap-next { right: 0; width: 67%; }
+  </style>
+</head>
+<body>
+  <div class="page">
+    <header class="topbar">
+      <span class="handle">jihyeon.design</span>
+      <div class="icons">
+        <svg class="icon" viewBox="0 0 24 24" aria-hidden="true"><rect x="3" y="3" width="18" height="18" rx="5"/><path d="M12 8v8M8 12h8"/></svg>
+        <svg class="icon" viewBox="0 0 24 24" aria-hidden="true"><path d="M4 7h16M4 12h16M4 17h16"/></svg>
+      </div>
+    </header>
+
+    <section class="profile">
+      <div class="avatar"><span></span></div>
+      <ul class="stats">
+        <li><strong>9</strong><span>게시물</span></li>
+        <li><strong id="followers">128</strong><span>팔로워</span></li>
+        <li><strong>3</strong><span>팔로잉</span></li>
+      </ul>
+    </section>
+
+    <div class="bio">
+      <p class="name">지현</p>
+      <p class="role">시각디자인 지망생</p>
+      <p>앨범과 패키지를 만들어 보고 싶어요.</p>
+      <p class="tags">#차분함 #관찰 #수집</p>
+    </div>
+
+    <div class="actions">
+      <button class="follow" id="follow">팔로우</button>
+      <button>메시지</button>
+    </div>
+
+    <ul class="highlights">
+      <li><button data-story="0"><div class="ring"><i style="background: var(--lime);"></i></div>연두색</button></li>
+      <li><button data-story="1"><div class="ring"><i style="background: var(--navy);"></i></div>남색</button></li>
+      <li><button data-story="2"><div class="ring"><i style="background: var(--cream);"></i></div>크림색</button></li>
+      <li><button data-story="3"><div class="ring"><i style="background: var(--navy); color: var(--lime);">A</i></div>앨범</button></li>
+      <li><button data-story="4"><div class="ring"><i style="background: var(--cream); color: var(--navy);">P</i></div>패키지</button></li>
+    </ul>
+
+    <nav class="tabs">
+      <span>
+        <svg class="icon" viewBox="0 0 24 24" aria-hidden="true"><rect x="3" y="3" width="18" height="18"/><path d="M9 3v18M15 3v18M3 9h18M3 15h18"/></svg>
+        Posts
+      </span>
+    </nav>
+
+    <ul class="grid">
+      <li class="post p-name"><span class="ko">지현</span></li>
+      <li class="post p-hello"><span class="en">Hello,<br>I am</span></li>
+      <li class="post p-calm"><span class="num">01</span><span class="ko">차분함</span></li>
+      <li class="post p-see"><div class="eye"></div><span class="num">02</span><span class="ko">관찰</span></li>
+      <li class="post p-collect"><div class="stack"><i></i><i></i><i></i></div><span class="num">03</span><span class="ko">수집</span></li>
+      <li class="post p-colors"><i></i><i></i><i></i></li>
+      <li class="post p-album"><div class="record"></div><span class="en">Album</span></li>
+      <li class="post p-package"><div class="box"></div><span class="en">Package</span></li>
+      <li class="post p-vol"><span class="en">Vol. 01</span><small>Week 1 — 2026</small></li>
+    </ul>
+  </div>
+
+  <nav class="bottombar">
+    <svg class="icon" viewBox="0 0 24 24" aria-hidden="true"><path d="M3 10.5 12 3l9 7.5V21h-6v-6H9v6H3z"/></svg>
+    <svg class="icon" viewBox="0 0 24 24" aria-hidden="true"><circle cx="11" cy="11" r="7"/><path d="m20 20-4-4"/></svg>
+    <svg class="icon" viewBox="0 0 24 24" aria-hidden="true"><rect x="3" y="3" width="18" height="18" rx="5"/><path d="M12 8v8M8 12h8"/></svg>
+    <svg class="icon" viewBox="0 0 24 24" aria-hidden="true"><path d="M12 20s-7-4.4-7-10a4 4 0 0 1 7-2.6A4 4 0 0 1 19 10c0 5.6-7 10-7 10z"/></svg>
+    <span class="me"></span>
+  </nav>
+
+  <!-- 게시물 크게 보기 -->
+  <div class="overlay modal" id="modal">
+    <button class="close" id="modal-close" aria-label="닫기">×</button>
+    <button class="nav-btn nav-prev" id="modal-prev" aria-label="이전 게시물">‹</button>
+    <button class="nav-btn nav-next" id="modal-next" aria-label="다음 게시물">›</button>
+    <div class="modal-box" role="dialog" aria-modal="true">
+      <div class="modal-media" id="modal-media">
+        <svg class="burst" id="burst" viewBox="0 0 24 24" aria-hidden="true"><path d="M12 20s-7-4.4-7-10a4 4 0 0 1 7-2.6A4 4 0 0 1 19 10c0 5.6-7 10-7 10z"/></svg>
+      </div>
+      <div class="modal-panel">
+        <div class="modal-head"><span class="mini-avatar"></span>jihyeon.design</div>
+        <p class="modal-caption" id="modal-caption"></p>
+        <div class="modal-foot">
+          <button class="like-btn" id="like" aria-label="좋아요">
+            <svg viewBox="0 0 24 24" aria-hidden="true"><path d="M12 20s-7-4.4-7-10a4 4 0 0 1 7-2.6A4 4 0 0 1 19 10c0 5.6-7 10-7 10z"/></svg>
+          </button>
+          <p class="likes" id="likes"></p>
+          <p class="date" id="date"></p>
+        </div>
+      </div>
+    </div>
+  </div>
+
+  <!-- 하이라이트 스토리 -->
+  <div class="overlay story" id="story">
+    <div class="story-stage" id="stage">
+      <div class="bars" id="bars"></div>
+      <div class="story-head">
+        <span class="mini-avatar" id="story-avatar"></span>
+        <span id="story-name"></span>
+        <button class="x" id="story-close" aria-label="닫기">×</button>
+      </div>
+      <div class="story-content" id="story-content"></div>
+      <button class="tap tap-prev" id="tap-prev" aria-label="이전"></button>
+      <button class="tap tap-next" id="tap-next" aria-label="다음"></button>
+    </div>
+  </div>
+
+  <script>
+    const $ = (id) => document.getElementById(id);
+
+    /* 팔로우 */
+    const btn = $('follow');
+    const count = $('followers');
+    btn.addEventListener('click', () => {
+      const on = btn.classList.toggle('on');
+      btn.textContent = on ? '팔로잉' : '팔로우';
+      count.textContent = on ? 129 : 128;
+    });
+
+    function openOverlay(el) { el.classList.add('open'); document.body.style.overflow = 'hidden'; }
+    function closeOverlay(el) { el.classList.remove('open'); document.body.style.overflow = ''; }
+
+    /* ── 게시물 설명 글 (그리드 순서대로) ── */
+    const posts = [
+      { caption: '안녕하세요, 지현입니다. 시각디자인을 공부하고 있어요.', likes: 42, date: '10월 25일' },
+      { caption: '첫 번째 기록. 천천히, 꾸준히 쌓아갈게요.', likes: 31, date: '10월 24일' },
+      { caption: '01 차분함 — 서두르지 않고, 오래 들여다보는 편이에요.', likes: 27, date: '10월 23일' },
+      { caption: '02 관찰 — 길가의 간판, 영수증 글씨체까지 자꾸 눈이 가요.', likes: 35, date: '10월 22일' },
+      { caption: '03 수집 — 티켓, 포장지, 엽서를 모아요. 언젠가 다 재료가 될 거예요.', likes: 29, date: '10월 21일' },
+      { caption: '좋아하는 세 가지 색. 연두, 남색, 크림.', likes: 38, date: '10월 20일' },
+      { caption: '언젠가 꼭 만들어 보고 싶은 것 — 앨범 커버. 음악 한 장을 그림 한 장으로.', likes: 44, date: '10월 19일' },
+      { caption: '손에 쥐었을 때 기분 좋은 패키지를 만들고 싶어요.', likes: 33, date: '10월 18일' },
+      { caption: 'Week 1. 디자인 수업 첫 주 과제로 만든 페이지예요.', likes: 51, date: '10월 17일' },
+    ];
+
+    const tiles = [...document.querySelectorAll('.grid .post')];
+    const modal = $('modal');
+    const media = $('modal-media');
+    const burst = $('burst');
+    const likeBtn = $('like');
+    let current = 0;
+
+    function renderLike() {
+      const p = posts[current];
+      likeBtn.classList.toggle('liked', !!p.liked);
+      $('likes').textContent = `좋아요 ${p.likes + (p.liked ? 1 : 0)}개`;
+    }
+
+    function openPost(i) {
+      current = (i + tiles.length) % tiles.length;
+      const p = posts[current];
+      const clone = tiles[current].cloneNode(true);
+      clone.removeAttribute('tabindex');
+      clone.removeAttribute('role');
+      burst.classList.remove('go');
+      media.replaceChildren(clone, burst);
+      $('modal-caption').innerHTML = `<b>jihyeon.design</b>${p.caption}`;
+      $('date').textContent = p.date;
+      renderLike();
+      openOverlay(modal);
+    }
+
+    tiles.forEach((tile, i) => {
+      tile.tabIndex = 0;
+      tile.setAttribute('role', 'button');
+      tile.addEventListener('click', () => openPost(i));
+      tile.addEventListener('keydown', (e) => { if (e.key === 'Enter') openPost(i); });
+    });
+
+    likeBtn.addEventListener('click', () => {
+      posts[current].liked = !posts[current].liked;
+      renderLike();
+    });
+
+    // 더블탭(더블클릭)하면 하트
+    let lastTap = 0;
+    media.addEventListener('pointerup', () => {
+      const now = Date.now();
+      if (now - lastTap < 300) {
+        posts[current].liked = true;
+        renderLike();
+        burst.classList.remove('go');
+        void burst.offsetWidth;
+        burst.classList.add('go');
+      }
+      lastTap = now;
+    });
+
+    $('modal-close').addEventListener('click', () => closeOverlay(modal));
+    $('modal-prev').addEventListener('click', () => openPost(current - 1));
+    $('modal-next').addEventListener('click', () => openPost(current + 1));
+    modal.addEventListener('click', (e) => { if (e.target === modal) closeOverlay(modal); });
+
+    /* ── 하이라이트 스토리 ── */
+    const stories = [
+      { name: '연두색', thumb: 'var(--lime)', slides: [
+        { bg: 'var(--lime)', fg: 'var(--navy)', small: 'Favorite Color 01', big: '연두색', text: '#b5d66b' },
+        { bg: 'var(--lime)', fg: 'var(--navy)', small: 'Why', big: '새잎 같은 색', text: '보고 있으면 기분이 맑아져요.' },
+      ] },
+      { name: '남색', thumb: 'var(--navy)', slides: [
+        { bg: 'var(--navy)', fg: 'var(--cream)', small: 'Favorite Color 02', big: '남색', text: '#1f2a4d' },
+        { bg: 'var(--navy)', fg: 'var(--cream)', small: 'Why', big: '밤하늘 같은 색', text: '차분해지고 싶을 때 떠올려요.' },
+      ] },
+      { name: '크림색', thumb: 'var(--cream)', slides: [
+        { bg: 'var(--cream)', fg: 'var(--navy)', small: 'Favorite Color 03', big: '크림색', text: '#f4eedd' },
+        { bg: 'var(--cream)', fg: 'var(--navy)', small: 'Why', big: '종이 같은 색', text: '여백을 가장 좋아하는 색이에요.' },
+      ] },
+      { name: '앨범', thumb: 'var(--navy)', slides: [
+        { bg: 'var(--navy)', fg: 'var(--lime)', small: 'Want to Make 01', big: '앨범 디자인', text: '' },
+        { bg: 'var(--navy)', fg: 'var(--cream)', small: 'Dream', big: '음악을 한 장으로', text: '좋아하는 음악의 분위기를\n커버 한 장에 담고 싶어요.' },
+      ] },
+      { name: '패키지', thumb: 'var(--cream)', slides: [
+        { bg: 'var(--cream)', fg: 'var(--navy)', small: 'Want to Make 02', big: '패키지 디자인', text: '' },
+        { bg: 'var(--cream)', fg: 'var(--navy)', small: 'Dream', big: '뜯는 순간까지', text: '상자를 여는 순간의 기분까지\n디자인하고 싶어요.' },
+      ] },
+    ];
+
+    const DURATION = 4000;
+    const storyEl = $('story');
+    const stage = $('stage');
+    let s = 0, slide = 0, startTime = 0, raf = 0;
+
+    function renderSlide() {
+      const st = stories[s];
+      const sl = st.slides[slide];
+      stage.style.background = sl.bg;
+      stage.style.color = sl.fg;
+      $('story-name').textContent = st.name;
+      $('story-avatar').style.background = st.thumb;
+      $('bars').innerHTML = st.slides
+        .map((_, i) => `<span><i style="width:${i < slide ? 100 : 0}%"></i></span>`).join('');
+
+      const content = document.createElement('div');
+      content.className = 'story-content';
+      content.innerHTML = `<p class="story-small">${sl.small}</p><p class="story-big">${sl.big}</p>`
+        + (sl.text ? `<p class="story-text">${sl.text.replace('\n', '<br>')}</p>` : '');
+      $('story-content').replaceWith(content);
+      content.id = 'story-content';
+
+      cancelAnimationFrame(raf);
+      startTime = performance.now();
+      raf = requestAnimationFrame(tick);
+    }
+
+    function tick(now) {
+      const t = Math.min((now - startTime) / DURATION, 1);
+      $('bars').children[slide].firstChild.style.width = `${t * 100}%`;
+      if (t >= 1) nextSlide();
+      else raf = requestAnimationFrame(tick);
+    }
+
+    function nextSlide() {
+      if (slide < stories[s].slides.length - 1) slide++;
+      else if (s < stories.length - 1) { s++; slide = 0; }
+      else return closeStory();
+      renderSlide();
+    }
+
+    function prevSlide() {
+      if (slide > 0) slide--;
+      else if (s > 0) { s--; slide = stories[s].slides.length - 1; }
+      renderSlide();
+    }
+
+    function openStory(i) { s = i; slide = 0; openOverlay(storyEl); renderSlide(); }
+    function closeStory() { cancelAnimationFrame(raf); closeOverlay(storyEl); }
+
+    document.querySelectorAll('[data-story]').forEach((b) => {
+      b.addEventListener('click', () => openStory(Number(b.dataset.story)));
+    });
+    $('tap-next').addEventListener('click', nextSlide);
+    $('tap-prev').addEventListener('click', prevSlide);
+    $('story-close').addEventListener('click', closeStory);
+
+    /* 키보드: Esc 닫기, ← → 넘기기 */
+    document.addEventListener('keydown', (e) => {
+      if (storyEl.classList.contains('open')) {
+        if (e.key === 'Escape') closeStory();
+        if (e.key === 'ArrowRight') nextSlide();
+        if (e.key === 'ArrowLeft') prevSlide();
+      } else if (modal.classList.contains('open')) {
+        if (e.key === 'Escape') closeOverlay(modal);
+        if (e.key === 'ArrowRight') openPost(current + 1);
+        if (e.key === 'ArrowLeft') openPost(current - 1);
+      }
+    });
+  </script>
+</body>
+</html>
