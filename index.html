@@ -1,0 +1,77 @@
+<!DOCTYPE html>
+<html lang="ko">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>디자인 수업</title>
+  <style>
+    :root {
+      --cream: #F3EEDF;  /* 미색 */
+      --lime: #B7D46A;   /* 밝은 연두 */
+      --deep: #5E8A28;   /* 짙은 연두 (큰 제목) */
+      --ink: #4A6E1F;    /* 더 짙은 연두 (작은 글자도 잘 읽히게) */
+    }
+
+    * { margin: 0; padding: 0; box-sizing: border-box; }
+
+    body {
+      min-height: 100vh;
+      padding: 64px 24px;
+      background: var(--cream);
+      color: var(--ink);
+      font-family: "Malgun Gothic", "Apple SD Gothic Neo", "Noto Sans KR", sans-serif;
+    }
+
+    main { max-width: 720px; margin: 0 auto; }
+
+    h1 {
+      font-size: clamp(40px, 10vw, 72px);
+      font-weight: 700;
+      line-height: 1.1;
+      letter-spacing: -0.02em;
+      color: var(--deep);
+    }
+
+    ul {
+      margin-top: 48px;
+      list-style: none;
+      border-top: 2px solid var(--deep);
+    }
+
+    li a {
+      display: flex;
+      justify-content: space-between;
+      align-items: baseline;
+      gap: 16px;
+      padding: 20px 0;
+      border-bottom: 1px solid var(--lime);
+      color: inherit;
+      font-size: 18px;
+      text-decoration: none;
+    }
+
+    li a:hover .label,
+    li a:focus-visible .label {
+      text-decoration: underline;
+      text-decoration-color: var(--lime);
+      text-decoration-thickness: 3px;
+      text-underline-offset: 6px;
+    }
+
+    li small { font-size: 14px; }
+  </style>
+</head>
+<body>
+  <main>
+    <h1>디자인 수업</h1>
+    <ul>
+      <li>
+        <a href="week2/poster-final.png">
+          <span class="label">Week 2 — 포스터 「JINGOO 2.0」</span>
+          <small>PNG</small>
+        </a>
+      </li>
+    </ul>
+  </main>
+</body>
+</html>
